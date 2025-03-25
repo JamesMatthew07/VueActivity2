@@ -22,7 +22,7 @@
               :prefix-icon="Lock"
             ></el-input>
           </el-form-item>
-          <el-button type="primary" @click="goToDisplayStudentInformation">Log In</el-button>
+          <el-button type="primary" @click="goToDisplayStudentInformation" style="width: 100%;">Log In</el-button>
           <p>Don't have an account? <a>Sign Up</a></p>
         </el-form>
       </el-col>
@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
+import { Lock, User } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { User, Lock } from '@element-plus/icons-vue'
 
 interface LogInForm {
   UserName: string
