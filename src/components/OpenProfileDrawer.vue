@@ -2,16 +2,16 @@
   <el-row>
     <el-col :xs="24">
       <el-drawer
-        :model-value="isOpen"
-        :before-close="handleClose"
-        direction="rtl"
+        :model-value="isOpenProfileDrawer"
+        :before-close="handleCloseProfileDrawer"
+        direction="ltr"
         class="demo-drawer"
         :size="drawerSize"
       >
         <div class="demo-drawer__content">
           <el-row>
             <el-col>
-              <h1 :span="24">Add Student</h1>
+              <h1 :span="24">My Profile</h1>
             </el-col>
           </el-row>
 
@@ -68,28 +68,28 @@
                 <el-button>Submit</el-button>
               </el-col>
               <el-col :span="12">
-                <el-button @click="handleClose">Cancel</el-button>
+                <el-button @click="handleCloseProfileDrawer">Cancel</el-button>
               </el-col>
             </el-row>
           </el-form>
 
           <!-- <el-form :model="form">
-            <el-form-item label="Name" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off" />
-            </el-form-item>
-            <el-form-item label="Area" :label-width="formLabelWidth">
-              <el-select v-model="form.region" placeholder="Please select activity area">
-                <el-option label="Area1" value="shanghai" />
-                <el-option label="Area2" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-form> -->
+              <el-form-item label="Name" :label-width="formLabelWidth">
+                <el-input v-model="form.name" autocomplete="off" />
+              </el-form-item>
+              <el-form-item label="Area" :label-width="formLabelWidth">
+                <el-select v-model="form.region" placeholder="Please select activity area">
+                  <el-option label="Area1" value="shanghai" />
+                  <el-option label="Area2" value="beijing" />
+                </el-select>
+              </el-form-item>
+            </el-form> -->
           <!-- <div class="demo-drawer__footer">
-        <el-button @click="cancelForm">Cancel</el-button>
-        <el-button type="primary" :loading="loading">
-          {{ loading ? 'Submitting ...' : 'Submit' }}
-        </el-button>
-      </div> -->
+          <el-button @click="cancelForm">Cancel</el-button>
+          <el-button type="primary" :loading="loading">
+            {{ loading ? 'Submitting ...' : 'Submit' }}
+          </el-button>
+        </div> -->
         </div>
       </el-drawer>
     </el-col>
@@ -142,13 +142,13 @@ watch(width, (newWidth) => {
 })
 
 defineProps({
-  isOpen: Boolean,
+  isOpenProfileDrawer: Boolean,
 })
 
-const emits = defineEmits(['closeDrawer'])
+const emits = defineEmits(['ProfilecloseDrawer'])
 
-const handleClose = () => {
-  emits('closeDrawer')
+const handleCloseProfileDrawer = () => {
+  emits('ProfilecloseDrawer')
 }
 
 // const formLabelWidth = '80px'

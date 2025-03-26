@@ -72,15 +72,18 @@
 
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
+import { InputStoreUser } from '@/stores/studentInfo'
+// import { SignUp } from '@/stores/studentInfo'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+const inputStore = InputStoreUser()
 
 interface SignUpForm {
   UserName: string
   FirstName: string
   MiddleName: string
   LastName: string
-  Birthday: ''
+  Birthday: Date | string
   Age: string
   Address: string
   Password: string
@@ -99,6 +102,8 @@ const signUpForm = reactive<SignUpForm>({
   Password: '',
   ConfirmPassword: '',
 })
+
+// console.log(signUpForm, '')
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const validatePassword = (rule: any, value: any, callback: any) => {
@@ -138,15 +143,20 @@ const SignUpFormRules = reactive<FormRules<SignUpForm>>({
 
 const router = useRouter()
 
+// const SignUp = Si
+
 const goToDisplayStudentInformation = () => {
-  router.push('/goToDisplayStudentInformation')
+  SignUpFormRef.value?.validate((valid) => {
+    if (valid) {
+      inputStore.SignUp(signUpForm)
+      router.push('/goToDisplayStudentInformation')
+      console.log(signUpForm)
+    }
+  })
 }
 </script>
 
 <style>
-/* .el-input {
-  width: 50vh;
-} */
 h1 {
   color: black;
   text-align: center;
