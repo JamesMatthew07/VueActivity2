@@ -12,16 +12,16 @@ export interface SignUpFormUser {
   ConfirmPassword: string
 }
 
+
 export const InputStoreUser = defineStore('user', {
   state: () => ({
-    users: JSON.parse(localStorage.getItem('users') || '[]') as SignUpFormUser[],
-    currentUser: localStorage.getItem('currentUser') || null,
+    users: [] as SignUpFormUser[],
+    currentUser: null as string | null,
   }),
 
   actions: {
     SignUp(user: SignUpFormUser) {
       this.users.push(user)
-      localStorage.setItem('users', JSON.stringify(this.users))
     },
 
     LogIn(UserName: string, Password: string): boolean {
@@ -30,7 +30,6 @@ export const InputStoreUser = defineStore('user', {
       )
       if (FindUser) {
         this.currentUser = UserName
-        localStorage.setItem('currentUser', UserName)
         return true
       }
       return false
@@ -53,7 +52,10 @@ export const InputStoreUser = defineStore('user', {
 
     logout() {
       this.currentUser = null
-      localStorage.removeItem('currentUser')
     },
+  },
+
+  persist: {
+    storage: localStorage,
   },
 })

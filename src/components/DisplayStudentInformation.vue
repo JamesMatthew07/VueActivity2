@@ -3,8 +3,8 @@
   <el-row :gutter="20">
     <el-col
       :span="6"
-      v-for="student in StudentList"
-      :key="student"
+      v-for="student in filteredStudentList"
+      :key="student.UserName"
       :xs="24"
       :sm="12"
       :md="8"
@@ -17,10 +17,10 @@
           <div class="cardButtonContainer" style="margin-top: 20px">
             <el-row :gutter="10">
               <el-col :span="24">
-                <el-button @click="openProfileDrawer" style="width: 100%">Update</el-button>
+                <el-button @click="openProfileDrawer(student)" style="width: 100%">Update</el-button>
               </el-col>
               <el-col :span="24">
-                <el-button style="width: 100%">Delete</el-button>
+                <el-button @click="deleteStudent(student.UserName)" style="width: 100%">Delete</el-button>
               </el-col>
             </el-row>
           </div>
@@ -36,6 +36,7 @@
   <DrawerVuer :isOpen="isDrawerOpen" @closeDrawer="handleCloseDrawer" />
   <OpenProfileDrawer
     :isOpenProfileDrawer="isProfileDrawerOpen"
+    :selectedStudent="selectedStudent"
     @ProfilecloseDrawer="handleProfileCloseDrawer"
   ></OpenProfileDrawer>
   <MyProfileDialog
@@ -45,33 +46,34 @@
 </template>
 
 <script setup lang="ts">
+import { InputStoreUser } from '@/stores/studentInfo'
+import { computed, ref } from 'vue'
 import DrawerVuer from './DraweVuer.vue'
 import MyProfileDialog from './MyProfileDialog.vue'
 import OpenProfileDrawer from './OpenProfileDrawer.vue'
-import { ref } from 'vue'
 
-const StudentList = [
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-  { UserName: 'James Matthew', Address: 'Sampaloc' },
-]
+const inputStore = InputStoreUser()
+
+const studentList = computed(() => inputStore.getAllUser())
+
+const filteredStudentList = computed(() => {
+  return studentList.value.filter(student => student.UserName !== inputStore.currentUser)
+})
 
 const isDrawerOpen = ref(false)
 const isProfileDrawerOpen = ref(false)
 const isDialogOpen = ref(false)
+const selectedStudent = ref(null)
 
 const openDrawer = () => {
   isDrawerOpen.value = !isDrawerOpen.value
   console.log('Open Drawer:', isDrawerOpen.value)
 }
 
-const openProfileDrawer = () => {
-  isProfileDrawerOpen.value = !isProfileDrawerOpen.value
-  console.log('Open Drawer:', isProfileDrawerOpen.value)
+const openProfileDrawer = (student) => {
+  selectedStudent.value = student
+  isProfileDrawerOpen.value = true
+  console.log('Open Profile Drawer:', isProfileDrawerOpen.value)
 }
 
 const openProfileDialog = () => {
@@ -92,6 +94,13 @@ const handleProfileCloseDrawer = () => {
 const handleDialogCloser = () => {
   isDialogOpen.value = !isDialogOpen.value
   console.log('Close Drawer:', isDialogOpen.value)
+}
+
+const deleteStudent = (userName: string) => {
+  const index = inputStore.users.findIndex((user) => user.UserName === userName)
+  if (index !== -1) {
+    inputStore.deleteStudent(index)
+  }
 }
 </script>
 

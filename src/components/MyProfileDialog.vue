@@ -1,33 +1,37 @@
 <template>
-  <!-- <el-dialog :model-value="isProfileDialogOpen" title="Shipping address" width="800">
-    <el-table :data="gridData">
-      <el-table-column property="date" label="Date" width="150" />
-      <el-table-column property="name" label="Name" width="200" />
-      <el-table-column property="address" label="Address" />
-    </el-table>
-  </el-dialog> -->
   <div class="dialogContainer">
     <el-dialog
       :model-value="isProfileDialogOpen"
-      title="Shipping address"
+      title="Profile Information"
       width="500"
       :before-close="handleProfileDialogClose"
     >
       <el-form :model="form">
-        <el-form-item label="Promotion name">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="Username">
+          <span>{{ form.UserName }}</span>
         </el-form-item>
-        <el-form-item label="Zones">
-          <el-select v-model="form.region" placeholder="Please select a zone">
-            <el-option label="Zone No.1" value="shanghai" />
-            <el-option label="Zone No.2" value="beijing" />
-          </el-select>
+        <el-form-item label="First Name">
+          <span>{{ form.FirstName }}</span>
+        </el-form-item>
+        <el-form-item label="Middle Name">
+          <span>{{ form.MiddleName }}</span>
+        </el-form-item>
+        <el-form-item label="Last Name">
+          <span>{{ form.LastName }}</span>
+        </el-form-item>
+        <el-form-item label="Birthday">
+          <span>{{ form.Birthday }}</span>
+        </el-form-item>
+        <el-form-item label="Age">
+          <span>{{ form.Age }}</span>
+        </el-form-item>
+        <el-form-item label="Address">
+          <span>{{ form.Address }}</span>
         </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleProfileDialogClose">Cancel</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false"> Confirm </el-button>
+          <el-button @click="handleProfileDialogClose">Close</el-button>
         </div>
       </template>
     </el-dialog>
@@ -35,57 +39,52 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import { defineProps, defineEmits } from 'vue'
+import { InputStoreUser } from '@/stores/studentInfo'
+import { defineEmits, defineProps, reactive, watch } from 'vue'
 
-defineProps({
+const props = defineProps({
   isProfileDialogOpen: Boolean,
 })
 
 const emits = defineEmits(['closerProfileDialog'])
 
+const inputStore = InputStoreUser()
+
+const form = reactive({
+  UserName: '',
+  FirstName: '',
+  MiddleName: '',
+  LastName: '',
+  Birthday: '',
+  Age: '',
+  Address: '',
+})
+
 const handleProfileDialogClose = () => {
   emits('closerProfileDialog')
 }
 
-// const dialogTableVisible = ref(false)
-const dialogFormVisible = ref(false)
-// const formLabelWidth = '140px'
-
-const form = reactive({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-})
-
-// const gridData = [
-//   {
-//     date: '2016-05-02',
-//     name: 'John Smith',
-//     address: 'No.1518,  Jinshajiang Road, Putuo District',
-//   },
-//   {
-//     date: '2016-05-04',
-//     name: 'John Smith',
-//     address: 'No.1518,  Jinshajiang Road, Putuo District',
-//   },
-//   {
-//     date: '2016-05-01',
-//     name: 'John Smith',
-//     address: 'No.1518,  Jinshajiang Road, Putuo District',
-//   },
-//   {
-//     date: '2016-05-03',
-//     name: 'John Smith',
-//     address: 'No.1518,  Jinshajiang Road, Putuo District',
-//   },
-// ]
+// Watch for changes in the dialog open state and update the form with the current user's data
+watch(
+  () => props.isProfileDialogOpen,
+  (newVal) => {
+    if (newVal && inputStore.currentUser) {
+      const currentUser = inputStore.users.find(user => user.UserName === inputStore.currentUser)
+      if (currentUser) {
+        form.UserName = currentUser.UserName
+        form.FirstName = currentUser.FirstName
+        form.MiddleName = currentUser.MiddleName
+        form.LastName = currentUser.LastName
+        form.Birthday = currentUser.Birthday
+        form.Age = currentUser.Age
+        form.Address = currentUser.Address
+      }
+    }
+  },
+  { immediate: true }
+)
 </script>
+
 <style scoped>
 :deep(.el-dialog) {
   border: 2px solid red;

@@ -20,10 +20,11 @@
               v-model="logInForm.Password"
               placeholder="Password"
               :prefix-icon="Lock"
+              type="password"
             ></el-input>
           </el-form-item>
-          <el-button type="primary" @click="goToDisplayStudentInformation" style="width: 100%;">Log In</el-button>
-          <p>Don't have an account? <a>Sign Up</a></p>
+          <el-button type="primary" @click="handleLogIn" style="width: 100%;">Log In</el-button>
+          <p>Don't have an account? <a @click="goToSignUp">Sign Up</a></p>
         </el-form>
       </el-col>
     </el-row>
@@ -31,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { InputStoreUser } from '@/stores/studentInfo'
 import { Lock, User } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { reactive, ref } from 'vue'
@@ -53,8 +55,23 @@ const LogInFormRules = reactive<FormRules<LogInForm>>({
 })
 
 const router = useRouter()
-const goToDisplayStudentInformation = () => {
-  router.push('/goToDisplayStudentInformation')
+const inputStore = InputStoreUser()
+
+const handleLogIn = () => {
+  LogInFormRef.value?.validate((valid) => {
+    if (valid) {
+      const success = inputStore.LogIn(logInForm.UserName, logInForm.Password)
+      if (success) {
+        router.push('/goToDisplayStudentInformation')
+      } else {
+        alert('Invalid username or password')
+      }
+    }
+  })
+}
+
+const goToSignUp = () => {
+  router.push('/signUp')
 }
 </script>
 

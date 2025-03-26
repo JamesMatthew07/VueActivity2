@@ -71,10 +71,10 @@
 </template>
 
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
 import { InputStoreUser } from '@/stores/studentInfo'
+import type { FormInstance, FormRules } from 'element-plus'
 // import { SignUp } from '@/stores/studentInfo'
-import { ref, reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 const inputStore = InputStoreUser()
 
@@ -149,7 +149,7 @@ const goToDisplayStudentInformation = () => {
   SignUpFormRef.value?.validate((valid) => {
     if (valid) {
       inputStore.SignUp(signUpForm)
-      router.push('/goToDisplayStudentInformation')
+      router.push('/goToLogInForm')
       console.log(signUpForm)
     }
   })
