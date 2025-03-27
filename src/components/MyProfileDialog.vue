@@ -32,6 +32,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="handleProfileDialogClose">Close</el-button>
+          <el-button @click="handleLogout">Log Out</el-button>
         </div>
       </template>
     </el-dialog>
@@ -41,6 +42,7 @@
 <script lang="ts" setup>
 import { InputStoreUser } from '@/stores/studentInfo'
 import { defineEmits, defineProps, reactive, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   isProfileDialogOpen: Boolean,
@@ -69,7 +71,7 @@ watch(
   () => props.isProfileDialogOpen,
   (newVal) => {
     if (newVal && inputStore.currentUser) {
-      const currentUser = inputStore.users.find(user => user.UserName === inputStore.currentUser)
+      const currentUser = inputStore.users.find((user) => user.UserName === inputStore.currentUser)
       if (currentUser) {
         form.UserName = currentUser.UserName
         form.FirstName = currentUser.FirstName
@@ -81,8 +83,15 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
+
+const router = useRouter()
+
+const handleLogout = () => {
+  localStorage.removeItem('currentUser')
+  router.push('/')
+}
 </script>
 
 <style scoped>

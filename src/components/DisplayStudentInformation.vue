@@ -1,37 +1,66 @@
 <template>
   <h1 style="margin-top: 20px; margin-bottom: 30px">Student Information</h1>
-  <el-row :gutter="20">
-    <el-col
-      :span="6"
-      v-for="student in filteredStudentList"
-      :key="student.UserName"
-      :xs="24"
-      :sm="12"
-      :md="8"
-      :lg="6"
-    >
-      <el-card>
-        <div class="card-content">
-          <h3 class="username">{{ student.UserName }}</h3>
-          <p class="address">{{ student.Address }}</p>
-          <div class="cardButtonContainer" style="margin-top: 20px">
-            <el-row :gutter="10">
-              <el-col :span="24">
-                <el-button @click="openProfileDrawer(student)" style="width: 100%">Update</el-button>
-              </el-col>
-              <el-col :span="24">
-                <el-button @click="deleteStudent(student.UserName)" style="width: 100%">Delete</el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
   <div class="buttonContainer">
     <el-button type="primary" @click="openDrawer">Add Student</el-button>
     <el-button type="primary" @click="openProfileDialog">Check my Profile</el-button>
   </div>
+  <div class="student-grid">
+    <el-card v-for="student in filteredStudentList" :key="student.UserName" class="student-card">
+      <div class="student-info">
+        <div class="avatar-section">
+          <el-avatar :size="64" :icon="UserFilled" />
+        </div>
+        <div class="student-details">
+          <div class="name-section">
+            <h3>{{ student.FirstName }} {{ student.MiddleName }}. {{ student.LastName }}</h3>
+            <p class="username">@{{ student.UserName }}</p>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Birthday: </span>
+              <span class="value">{{ formatDate(student.Birthday) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Age: </span>
+              <span class="value">{{ student.Age }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Address: </span>
+              <span class="value">{{ student.Address }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Course: </span>
+              <span class="value">{{ student.Course }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <el-row>
+            <el-col :span="12">
+              <el-button
+                type="primary"
+                text
+                :icon="Edit"
+                @click="openProfileDrawer(student)"
+                style="width: 100%"
+              />
+            </el-col>
+            <el-col :span="12">
+              <el-button
+                type="danger"
+                text
+                :icon="Delete"
+                @click="deleteStudent(student.UserName)"
+                style="width: 100%"
+              />
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+    </el-card>
+  </div>
+  <!-- </el-col> -->
+  <!-- </el-row> -->
 
   <DrawerVuer :isOpen="isDrawerOpen" @closeDrawer="handleCloseDrawer" />
   <OpenProfileDrawer
@@ -51,13 +80,14 @@ import { computed, ref } from 'vue'
 import DrawerVuer from './DraweVuer.vue'
 import MyProfileDialog from './MyProfileDialog.vue'
 import OpenProfileDrawer from './OpenProfileDrawer.vue'
+import { Delete, Edit, UserFilled } from '@element-plus/icons-vue'
 
 const inputStore = InputStoreUser()
 
 const studentList = computed(() => inputStore.getAllUser())
 
 const filteredStudentList = computed(() => {
-  return studentList.value.filter(student => student.UserName !== inputStore.currentUser)
+  return studentList.value.filter((student) => student.UserName !== inputStore.currentUser)
 })
 
 const isDrawerOpen = ref(false)
@@ -102,25 +132,20 @@ const deleteStudent = (userName: string) => {
     inputStore.deleteStudent(index)
   }
 }
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
 </script>
 
 <style scoped>
-:deep(.el-card) {
-  display: flex;
-  height: 250px;
-  margin: 10px;
-  border: 2px solid red;
-  justify-content: center;
-  align-items: center;
+h3 {
+  text-align: center;
 }
-
-:deep(.el-card__body) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
 .buttonContainer {
   display: flex;
   justify-content: center;
@@ -141,5 +166,69 @@ const deleteStudent = (userName: string) => {
 .address {
   font-size: 1rem;
   color: #606266;
+}
+
+.student-container {
+  max-width: 1600px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 40px;
+}
+
+.student-card {
+  background: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  max-width: 300px;
+}
+
+.student-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.student-info {
+  padding: 1rem;
+}
+.avatar-section,
+.student-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.username {
+  text-align: center;
+}
+
+@media (max-width: 1400px) {
+  .student-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .student-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .student-grid {
+    grid-template-columns: 1fr;
+  }
+  .student-card {
+    max-width: 100%;
+  }
 }
 </style>

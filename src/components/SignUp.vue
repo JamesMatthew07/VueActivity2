@@ -37,12 +37,13 @@
               type="date"
               placeholder="Birth Date"
               style="width: 100%"
+              @change="calculateAge"
             ></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="Age">
-            <el-input v-model="signUpForm.Age" placeholder="Age" type="number"></el-input>
+            <el-input v-model="signUpForm.Age" placeholder="Age" type="number" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -50,6 +51,18 @@
       <el-form-item prop="Address">
         <el-input v-model="signUpForm.Address" placeholder="Address"></el-input>
       </el-form-item>
+
+      <el-form-item prop="Course">
+        <el-select v-model="signUpForm.Course" placeholder="Select Course" style="width: 100%">
+          <el-option
+            v-for="course in courseOptions"
+            :key="course"
+            :label="course"
+            :value="course"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item prop="Password">
         <el-input v-model="signUpForm.Password" type="password" placeholder="Password"></el-input>
       </el-form-item>
@@ -64,7 +77,7 @@
         <el-button type="primary" @click="goToDisplayStudentInformation" style="width: 100%"
           >Sign Up</el-button
         >
-        <p style="color: black">Already have an account?<a>Log In</a></p>
+        <p style="color: black">Already have an account?<a @click="goToLogIn">Login</a></p>
       </el-form-item>
     </el-form>
   </div>
@@ -83,11 +96,12 @@ interface SignUpForm {
   FirstName: string
   MiddleName: string
   LastName: string
-  Birthday: Date | string
+  Birthday: string
   Age: string
   Address: string
-  Password: string
-  ConfirmPassword: string
+  Course: string
+  Password?: string
+  ConfirmPassword?: string
 }
 
 const SignUpFormRef = ref<FormInstance>()
@@ -99,9 +113,18 @@ const signUpForm = reactive<SignUpForm>({
   Birthday: '',
   Age: '',
   Address: '',
+  Course: '',
   Password: '',
   ConfirmPassword: '',
 })
+
+const courseOptions = [
+  'Bachelor of Science in Information and Technology',
+  'Bachelor in Computer Science',
+  'Bachelor of Science in Tourism',
+  'Bachelor of Science in Hotel and Restaurant Management',
+  'Bachelor of Science in Nursing',
+]
 
 // console.log(signUpForm, '')
 
@@ -141,6 +164,20 @@ const SignUpFormRules = reactive<FormRules<SignUpForm>>({
   ConfirmPassword: [{ validator: validatePassword2, trigger: 'blur' }],
 })
 
+const calculateAge = () => {
+  if (signUpForm.Birthday) {
+    const birthDate = new Date(signUpForm.Birthday)
+    const today = new Date()
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--
+    }
+    signUpForm.Age = age
+  }
+}
+
 const router = useRouter()
 
 // const SignUp = Si
@@ -150,9 +187,12 @@ const goToDisplayStudentInformation = () => {
     if (valid) {
       inputStore.SignUp(signUpForm)
       router.push('/goToLogInForm')
-      console.log(signUpForm)
     }
   })
+}
+
+const goToLogIn = () => {
+  router.push('/goToLogInForm')
 }
 </script>
 

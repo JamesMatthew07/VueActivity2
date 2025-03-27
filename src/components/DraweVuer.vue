@@ -44,7 +44,6 @@
                 </el-form-item>
               </el-col>
             </el-row>
-
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item prop="Birthday">
@@ -53,12 +52,18 @@
                     type="date"
                     placeholder="Birth Date"
                     style="width: 100%"
+                    @change="calculateAge"
                   ></el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item prop="Age">
-                  <el-input v-model="addStudentForm.Age" placeholder="Age" type="number"></el-input>
+                  <el-input
+                    v-model="addStudentForm.Age"
+                    placeholder="Age"
+                    type="number"
+                    disabled
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -70,6 +75,21 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
+            <el-form-item prop="Course">
+              <el-select
+                v-model="addStudentForm.Course"
+                placeholder="Select Course"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="course in courseOptions"
+                  :key="course"
+                  :label="course"
+                  :value="course"
+                ></el-option>
+              </el-select>
+            </el-form-item>
 
             <el-row :gutter="20">
               <el-col :span="12">
@@ -100,9 +120,32 @@ interface AddStudentForm {
   Birthday: string | Date
   Age: string
   Address: string
+  Course: string
 }
 
 const AddStudentFormRef = ref<FormInstance>()
+
+const calculateAge = () => {
+  if (addStudentForm.Birthday) {
+    const birthDate = new Date(addStudentForm.Birthday)
+    const today = new Date()
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--
+    }
+    addStudentForm.Age = age
+  }
+}
+
+const courseOptions = [
+  'Bachelor of Science in Information and Technology',
+  'Bachelor in Computer Science',
+  'Bachelor of Science in Tourism',
+  'Bachelor of Science in Hotel and Restaurant Management',
+  'Bachelor of Science in Nursing',
+]
 
 const addStudentForm = reactive<AddStudentForm>({
   UserName: '',
@@ -112,6 +155,7 @@ const addStudentForm = reactive<AddStudentForm>({
   Birthday: '',
   Age: '',
   Address: '',
+  Course: '',
 })
 
 const AddStudentFormRules = reactive<FormRules<AddStudentForm>>({

@@ -5,13 +5,13 @@ export interface SignUpFormUser {
   FirstName: string
   MiddleName: string
   LastName: string
-  Birthday: Date | string
+  Birthday: string
   Age: string
   Address: string
-  Password: string
-  ConfirmPassword: string
+  Course: string
+  Password?: string
+  ConfirmPassword?: string
 }
-
 
 export const InputStoreUser = defineStore('user', {
   state: () => ({

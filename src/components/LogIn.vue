@@ -23,7 +23,7 @@
               type="password"
             ></el-input>
           </el-form-item>
-          <el-button type="primary" @click="handleLogIn" style="width: 100%;">Log In</el-button>
+          <el-button type="primary" @click="handleLogIn" style="width: 100%">Log In</el-button>
           <p>Don't have an account? <a @click="goToSignUp">Sign Up</a></p>
         </el-form>
       </el-col>
@@ -71,7 +71,7 @@ const handleLogIn = () => {
 }
 
 const goToSignUp = () => {
-  router.push('/signUp')
+  router.push('/goToSignUpForm')
 }
 </script>
 
