@@ -12,7 +12,7 @@
         </div>
         <div class="student-details">
           <div class="name-section">
-            <h3>{{ student.FirstName }} {{ student.MiddleName }}. {{ student.LastName }}</h3>
+            <h3>{{ student.FirstName }} {{ student.LastName }}</h3>
             <p class="username">@{{ student.UserName }}</p>
           </div>
           <div class="info-grid">
@@ -161,6 +161,19 @@ h3 {
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: #303133;
+}
+
+.username {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #303133;
+  display: inline-block; /* Ensures the text behaves like a block element */
+  width: 100%; /* Ensures the container doesn't stretch beyond its space */
+  white-space: nowrap; /* Prevents the text from wrapping to the next line */
+  overflow: hidden; /* Ensures excess text is hidden */
+  text-overflow: ellipsis; /* Adds the ellipsis at the end of the text */
+  max-width: 200px; /* You can adjust this width depending on your layout */
 }
 
 .address {

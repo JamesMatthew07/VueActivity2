@@ -197,6 +197,10 @@ const handleSubmit = () => {
 </script>
 
 <style scoped>
+:deep(.el-input__inner) {
+  color: black;
+}
+
 .buttonContainer {
   display: flex;
   justify-content: center;

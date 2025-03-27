@@ -133,11 +133,32 @@ const validatePassword = (rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('Please input the password'))
   } else {
-    if (signUpForm.ConfirmPassword !== '') {
-      if (!SignUpFormRef.value) return
-      SignUpFormRef.value.validateField('ConfirmPassword')
+    // Regular expressions to check for requirements
+    const upperCasePattern = /[A-Z]/ // At least one uppercase letter
+    const lowerCasePattern = /[a-z]/ // At least one lowercase letter
+    const specialCharacterPattern = /[!@#$%^&*(),.?":{}|<>]/ // At least one special character
+    const numberPattern = /\d/ // At least one number
+    const minLength = 8 // Minimum length for the password
+
+    // Check if password meets the conditions
+    if (!upperCasePattern.test(value)) {
+      callback(new Error('Password must contain at least one uppercase letter'))
+    } else if (!lowerCasePattern.test(value)) {
+      callback(new Error('Password must contain at least one lowercase letter'))
+    } else if (!specialCharacterPattern.test(value)) {
+      callback(new Error('Password must contain at least one special character'))
+    } else if (!numberPattern.test(value)) {
+      callback(new Error('Password must contain at least one number'))
+    } else if (value.length < minLength) {
+      callback(new Error('Password must be at least 8 characters long'))
+    } else {
+      // If password is valid, check ConfirmPassword field
+      if (signUpForm.ConfirmPassword !== '') {
+        if (!SignUpFormRef.value) return
+        SignUpFormRef.value.validateField('ConfirmPassword')
+      }
+      callback()
     }
-    callback()
   }
 }
 
