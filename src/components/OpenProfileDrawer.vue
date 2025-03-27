@@ -4,14 +4,14 @@
       <el-drawer
         :model-value="isOpenProfileDrawer"
         :before-close="handleCloseProfileDrawer"
-        direction="ltr"
+        direction="rtl"
         class="demo-drawer"
         :size="drawerSize"
       >
         <div class="demo-drawer__content">
           <el-row>
             <el-col>
-              <h1 :span="24">My Profile</h1>
+              <h1 :span="24">Edit Profile</h1>
             </el-col>
           </el-row>
 
@@ -19,7 +19,11 @@
             <el-row>
               <el-col>
                 <el-form-item prop="UserName">
-                  <el-input v-model="addStudentForm.UserName" placeholder="Username" disabled></el-input>
+                  <el-input
+                    v-model="addStudentForm.UserName"
+                    placeholder="Username"
+                    disabled
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -71,15 +75,29 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <el-button type="primary" @click="handleSubmit">Submit</el-button>
-              </el-col>
-              <el-col :span="12">
-                <el-button @click="handleCloseProfileDrawer">Cancel</el-button>
-              </el-col>
-            </el-row>
+            <el-form-item prop="Course">
+              <el-select
+                v-model="addStudentForm.Course"
+                placeholder="Select Course"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="course in courseOptions"
+                  :key="course"
+                  :label="course"
+                  :value="course"
+                ></el-option>
+              </el-select>
+            </el-form-item>
           </el-form>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-button type="primary" @click="handleSubmit">Submit</el-button>
+            </el-col>
+            <el-col :span="12">
+              <el-button @click="handleCloseProfileDrawer">Cancel</el-button>
+            </el-col>
+          </el-row>
         </div>
       </el-drawer>
     </el-col>
@@ -90,7 +108,7 @@
 import { InputStoreUser } from '@/stores/studentInfo'
 import { useWindowSize } from '@vueuse/core'
 import type { FormInstance, FormRules } from 'element-plus'
-import { defineEmits, defineProps, reactive, ref, watch } from 'vue'
+import { defineEmits, defineProps, nextTick, reactive, ref, watch } from 'vue'
 
 interface AddStudentForm {
   UserName: string
@@ -100,6 +118,7 @@ interface AddStudentForm {
   Birthday: string | Date
   Age: string
   Address: string
+  Course: string
 }
 
 const AddStudentFormRef = ref<FormInstance>()
@@ -112,17 +131,27 @@ const addStudentForm = reactive<AddStudentForm>({
   Birthday: '',
   Age: '',
   Address: '',
+  Course: '',
 })
 
 const AddStudentFormRules = reactive<FormRules<AddStudentForm>>({
   UserName: [{ required: true, message: 'Please input username', trigger: 'blur' }],
   FirstName: [{ required: true, message: 'Please input firstname', trigger: 'blur' }],
-  MiddleName: [{ required: true, message: 'Please input middlename', trigger: 'blur' }],
+  MiddleName: [{ required: false, message: 'Please input middlename', trigger: 'blur' }],
   LastName: [{ required: true, message: 'Please input lastname', trigger: 'blur' }],
   Birthday: [{ required: true, message: 'Please pick a date', trigger: 'blur' }],
   Age: [{ required: true, message: 'Please input age', trigger: 'blur' }],
   Address: [{ required: true, message: 'Please input address', trigger: 'blur' }],
+  Course: [{ required: true, message: 'Please input course', trigger: 'blur' }],
 })
+
+const courseOptions = [
+  'Bachelor of Science in Information and Technology',
+  'Bachelor in Computer Science',
+  'Bachelor of Science in Tourism',
+  'Bachelor of Science in Hotel and Restaurant Management',
+  'Bachelor of Science in Nursing',
+]
 
 const { width } = useWindowSize()
 const drawerSize = ref()
@@ -149,6 +178,7 @@ const handleSubmit = () => {
     if (valid) {
       inputStore.updateStudentInfo(addStudentForm)
       handleCloseProfileDrawer()
+      nextTick()
     }
   })
 }
@@ -167,7 +197,7 @@ watch(
       addStudentForm.Address = newVal.Address
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

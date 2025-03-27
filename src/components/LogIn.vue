@@ -3,7 +3,7 @@
     <el-row>
       <el-col>
         <div class="Container">
-          <h1>Log In</h1>
+          <h1 style="color: white">Log In</h1>
         </div>
       </el-col>
       <el-col>
@@ -24,7 +24,9 @@
             ></el-input>
           </el-form-item>
           <el-button type="primary" @click="handleLogIn" style="width: 100%">Log In</el-button>
-          <p>Don't have an account? <a @click="goToSignUp">Sign Up</a></p>
+          <p style="color: antiquewhite">
+            Don't have an account? <a @click="goToSignUp">Sign Up</a>
+          </p>
         </el-form>
       </el-col>
     </el-row>

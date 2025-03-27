@@ -12,8 +12,8 @@
         </div>
         <div class="student-details">
           <div class="name-section">
-            <h3>{{ student.FirstName }} {{ student.LastName }}</h3>
-            <p class="username">@{{ student.UserName }}</p>
+            <h3>@{{ student.UserName }}</h3>
+            <p class="username">{{ student.FirstName }} {{ student.LastName }}</p>
           </div>
           <div class="info-grid">
             <div class="info-item">
@@ -34,29 +34,27 @@
             </div>
           </div>
         </div>
-        <div class="card-actions">
-          <el-row>
-            <el-col :span="12">
-              <el-button
-                type="primary"
-                text
-                :icon="Edit"
-                @click="openProfileDrawer(student)"
-                style="width: 100%"
-              />
-            </el-col>
-            <el-col :span="12">
-              <el-button
-                type="danger"
-                text
-                :icon="Delete"
-                @click="deleteStudent(student.UserName)"
-                style="width: 100%"
-              />
-            </el-col>
-          </el-row>
-        </div>
       </div>
+      <el-row>
+        <el-col :span="12">
+          <el-button
+            type="primary"
+            text
+            :icon="Edit"
+            @click="openProfileDrawer(student)"
+            style="width: 100%"
+          />
+        </el-col>
+        <el-col :span="12">
+          <el-button
+            type="danger"
+            text
+            :icon="Delete"
+            @click="deleteStudent(student.UserName)"
+            style="width: 100%"
+          />
+        </el-col>
+      </el-row>
     </el-card>
   </div>
   <!-- </el-col> -->

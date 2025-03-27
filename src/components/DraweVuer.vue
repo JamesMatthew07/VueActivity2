@@ -125,6 +125,7 @@ interface AddStudentForm {
 
 const AddStudentFormRef = ref<FormInstance>()
 
+// Calculate age based on the birthday
 const calculateAge = () => {
   if (addStudentForm.Birthday) {
     const birthDate = new Date(addStudentForm.Birthday)
@@ -135,7 +136,14 @@ const calculateAge = () => {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--
     }
-    addStudentForm.Age = age
+    addStudentForm.Age = age.toString()
+
+    // Validate that the age is at least 3 years
+    if (age < 3) {
+      AddStudentFormRules.Age = [
+        { required: true, message: 'Age must be at least 3 years old', trigger: 'blur' },
+      ]
+    }
   }
 }
 
@@ -160,9 +168,29 @@ const addStudentForm = reactive<AddStudentForm>({
 
 const AddStudentFormRules = reactive<FormRules<AddStudentForm>>({
   UserName: [{ required: true, message: 'Please input username', trigger: 'blur' }],
-  FirstName: [{ required: true, message: 'Please input firstname', trigger: 'blur' }],
-  MiddleName: [{ required: true, message: 'Please input middlename', trigger: 'blur' }],
-  LastName: [{ required: true, message: 'Please input lastname', trigger: 'blur' }],
+  FirstName: [
+    { required: true, message: 'Please input firstname', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Firstname cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
+  MiddleName: [
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Middlename cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
+  LastName: [
+    { required: true, message: 'Please input lastname', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Lastname cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
   Birthday: [{ required: true, message: 'Please pick a date', trigger: 'blur' }],
   Age: [{ required: true, message: 'Please input age', trigger: 'blur' }],
   Address: [{ required: true, message: 'Please input address', trigger: 'blur' }],
@@ -174,6 +202,7 @@ const drawerSize = ref()
 watch(width, (newWidth) => {
   drawerSize.value = newWidth <= 768 ? '100%' : '30%'
 })
+
 defineProps({
   isOpen: Boolean,
 })

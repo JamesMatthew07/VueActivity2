@@ -175,12 +175,34 @@ const validatePassword2 = (rule: any, value: any, callback: any) => {
 
 const SignUpFormRules = reactive<FormRules<SignUpForm>>({
   UserName: [{ required: true, message: 'Please input username', trigger: 'blur' }],
-  FirstName: [{ required: true, message: 'Please input firstname', trigger: 'blur' }],
-  MiddleName: [{ required: true, message: 'Please input middlename', trigger: 'blur' }],
-  LastName: [{ required: true, message: 'Please input lastname', trigger: 'blur' }],
+  FirstName: [
+    { required: true, message: 'Please input firstname', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Firstname cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
+  MiddleName: [
+    { required: true, message: 'Please input middlename', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Middlename cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
+  LastName: [
+    { required: true, message: 'Please input lastname', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z\s]+$/,
+      message: 'Lastname cannot contain numbers or special characters',
+      trigger: 'blur',
+    },
+  ],
   Birthday: [{ required: true, message: 'Please pick a date', trigger: 'blur' }],
   Age: [{ required: true, message: 'Please input age', trigger: 'blur' }],
   Address: [{ required: true, message: 'Please input address', trigger: 'blur' }],
+
   Password: [{ validator: validatePassword, trigger: 'blur' }],
   ConfirmPassword: [{ validator: validatePassword2, trigger: 'blur' }],
 })
@@ -218,6 +240,9 @@ const goToLogIn = () => {
 </script>
 
 <style>
+.el-input__inner {
+  color: black;
+}
 h1 {
   color: black;
   text-align: center;
